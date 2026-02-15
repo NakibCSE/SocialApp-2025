@@ -10,11 +10,12 @@ import { errorContext } from 'rxjs/internal/util/errorContext';
 })
 export class AppComponent implements OnInit{
   private http = inject(HttpClient);
-  title = 'Social App';
+  protected title = 'Social App';
+  protected members: any;
 
    ngOnInit(): void {
     this.http.get('https://localhost:5001/api/members').subscribe({
-      next: Response => console.log(Response),
+      next: response => this.members = response,
       error: error => console.log(error),
       complete: () => console.log('Completed http request') 
     })
