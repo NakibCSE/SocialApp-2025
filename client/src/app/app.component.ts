@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, Signal } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 import { errorContext } from 'rxjs/internal/util/errorContext';
 
 @Component({
@@ -11,13 +12,20 @@ import { errorContext } from 'rxjs/internal/util/errorContext';
 export class AppComponent implements OnInit{
   private http = inject(HttpClient);
   protected title = 'Social App';
-  protected members: any;
+  protected members = signal<any>([]);
 
-   ngOnInit(): void {
-    this.http.get('https://localhost:5001/api/members').subscribe({
-      next: response => this.members = response,
-      error: error => console.log(error),
-      complete: () => console.log('Completed http request') 
-    })
+   async ngOnInit(){
+    this.members.set(await this.getMembers())
+  }
+
+  async getMembers(){
+    try {
+
+      return lastValueFrom(this.http.get('https://localhost:5001/api/members'));
+      
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 }
