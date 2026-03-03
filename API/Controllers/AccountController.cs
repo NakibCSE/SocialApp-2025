@@ -2,22 +2,25 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using API.Data;
+using API.DTOs;
 using API.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
 public class AccountController(AppDbContext context) : BaseApiController
 {
    [HttpPost("register")] // api/account/register
-   public async Task<ActionResult<AppUsers>> Register(string email, string displayName, string password)
+   public async Task<ActionResult<AppUsers>> Register(RegisterDto registerDto)
     {
+        if(await EmailExist(registerDto.Email)) return BadRequest("Email Taken");
         using var hmac = new HMACSHA512();
         var user = new AppUsers
         {
-            DisplayName = displayName,
-            Email = email,
-            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password)),
+            DisplayName = registerDto.DisplayName,
+            Email = registerDto.Email,
+            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
             PasswordSalt = hmac.Key    
         };
         context.Users.Add(user);
@@ -25,4 +28,22 @@ public class AccountController(AppDbContext context) : BaseApiController
 
         return user;
     } 
+
+    [HttpPost("login")]
+    public async Task<ActionResult<AppUsers>> Login(LoginDto loginDto)
+    {
+        var user = await context.Users.SingleOrDefaultAsync(x => x.Email == loginDto.Email);
+        if(user == null) return Unauthorized("Invalid email address");
+        using var hmac = new HMACSHA512(user.PasswordSalt);
+        var ComputeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+        for(var i = 0; i<ComputeHash.Length; i++)
+        {
+            if(ComputeHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
+        }
+        return user;
+    }
+    public async Task<bool> EmailExist(string Email)
+    {
+        return await context.Users.AnyAsync(x => x.Email.ToLower() ==  Email.ToLower());
+    }
 }
