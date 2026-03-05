@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountServiceService } from '../../Core/services/account-service.service';
 
@@ -12,11 +12,19 @@ import { AccountServiceService } from '../../Core/services/account-service.servi
 export class NavComponent {
   private accountService = inject(AccountServiceService);
   protected creds: any = {}
+  protected loggedIn = signal(false);
 
   login(){
     this.accountService.login(this.creds).subscribe({
-      next: resutl => console.log(resutl),
+      next: resutl => {
+        console.log(resutl);
+        this.loggedIn.set(true);
+        this.creds = {};
+      },
       error: error => alert(error.message)
     });
+  }
+  logout(){
+    this.loggedIn.set(false);
   }
 }
