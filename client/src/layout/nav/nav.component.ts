@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AccountServiceService } from '../../Core/services/account-service.service';
 
 @Component({
   selector: 'app-nav',
@@ -9,9 +10,13 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './nav.component.css'
 })
 export class NavComponent {
+  private accountService = inject(AccountServiceService);
   protected creds: any = {}
 
   login(){
-    console.log(this.creds);
+    this.accountService.login(this.creds).subscribe({
+      next: resutl => console.log(resutl),
+      error: error => alert(error.message)
+    });
   }
 }
