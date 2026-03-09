@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
+import { RegisterComponent } from "../account/register/register.component";
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, RegisterComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
