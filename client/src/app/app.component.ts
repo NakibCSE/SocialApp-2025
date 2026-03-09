@@ -4,10 +4,11 @@ import { lastValueFrom } from 'rxjs';
 import { errorContext } from 'rxjs/internal/util/errorContext';
 import { NavComponent } from "../layout/nav/nav.component";
 import { AccountServiceService } from '../Core/services/account-service.service';
+import { HomeComponent } from "../features/home/home.component";
 
 @Component({
   selector: 'app-root',
-  imports: [NavComponent],
+  imports: [NavComponent, HomeComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
