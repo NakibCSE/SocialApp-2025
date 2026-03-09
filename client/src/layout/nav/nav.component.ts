@@ -10,21 +10,19 @@ import { AccountServiceService } from '../../Core/services/account-service.servi
   styleUrl: './nav.component.css'
 })
 export class NavComponent {
-  private accountService = inject(AccountServiceService);
+  protected accountService = inject(AccountServiceService);
   protected creds: any = {}
-  protected loggedIn = signal(false);
 
   login(){
     this.accountService.login(this.creds).subscribe({
       next: resutl => {
         console.log(resutl);
-        this.loggedIn.set(true);
         this.creds = {};
       },
       error: error => alert(error.message)
     });
   }
   logout(){
-    this.loggedIn.set(false);
+    this.accountService.logout();
   }
 }
