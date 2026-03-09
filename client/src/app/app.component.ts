@@ -5,6 +5,7 @@ import { errorContext } from 'rxjs/internal/util/errorContext';
 import { NavComponent } from "../layout/nav/nav.component";
 import { AccountServiceService } from '../Core/services/account-service.service';
 import { HomeComponent } from "../features/home/home.component";
+import { User } from '../types/user';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,7 @@ export class AppComponent implements OnInit{
   private accountService = inject(AccountServiceService);
   private http = inject(HttpClient);
   protected title = 'Social App';
-  protected members = signal<any>([]);
+  protected members = signal<User[]>([]);
 
    async ngOnInit(){
     this.members.set(await this.getMembers())
@@ -31,7 +32,7 @@ export class AppComponent implements OnInit{
   async getMembers(){
     try {
 
-      return lastValueFrom(this.http.get('https://localhost:5001/api/members'));
+      return lastValueFrom(this.http.get<User[]>('https://localhost:5001/api/members'));
       
     } catch (error) {
       console.log(error);

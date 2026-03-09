@@ -6,7 +6,7 @@
             <input type="text" class="input w-full" name="displayName" [(ngModel)]="creds.displayName" placeholder="Display Name" required>
             <input type="password" class="input w-full" name="password" [(ngModel)]="creds.password" placeholder="Password" required>
             <div class="flex itme justify-end gap-3">
-                <button class="btn">Cancel</button>
+                <button (click)="cancel()" type="button" class="btn">Cancel</button>
                 <button class="btn btn-primary" type="submit">Register</button>
             </div>
         </form>
