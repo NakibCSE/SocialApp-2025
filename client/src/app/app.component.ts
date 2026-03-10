@@ -6,15 +6,18 @@ import { NavComponent } from "../layout/nav/nav.component";
 import { AccountServiceService } from '../Core/services/account-service.service';
 import { HomeComponent } from "../features/home/home.component";
 import { User } from '../types/user';
+import { Router, RouterOutlet } from '@angular/router';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [NavComponent, HomeComponent],
+  imports: [NavComponent, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit{
   private accountService = inject(AccountServiceService);
+  protected router = inject(Router);
   private http = inject(HttpClient);
   protected title = 'Social App';
   protected members = signal<User[]>([]);
