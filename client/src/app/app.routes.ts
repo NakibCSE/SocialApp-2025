@@ -7,6 +7,7 @@ import { MessagesComponent } from '../features/messages/messages.component';
 import { authGuard } from '../Core/guards/auth.guard';
 import { TestErrorsComponent } from '../features/test-errors/test-errors.component';
 import { NotFoundComponent } from '../Shared/errors/not-found/not-found.component';
+import { ServerErrorComponent } from '../Shared/errors/server-error/server-error.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -23,4 +24,5 @@ export const routes: Routes = [
     },
     {path: 'errors', component: TestErrorsComponent},
     { path: '**', component: NotFoundComponent },
+    { path: 'server-error', component: ServerErrorComponent },
 ];
